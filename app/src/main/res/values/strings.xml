@@ -4,9 +4,41 @@
     <!-- Strings used for fragments for navigation -->
     <string name="home_fragment_label">Home</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
+    <string name="submit">Submit</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="website_textview_label">What is your website?</string>
+    <string name="dropdown_label">Choose your objectives</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="hint">www.mywebsite.com</string>
+    <!--objectives-->
+    <string name="tap_to_select">Tap to select</string>
+    <string name="tagline">Tagline</string>
+    <string name="facebook_ad">Facebook Ad</string>
+    <string name="elevator_pitch">Elevator Pitch</string>
+    <string name="executive_summary">Executive Summary</string>
+    <string name="improve_seo">Improve SEO</string>
+    <string name="sample_review">Sample Review</string>
+    <string name="hashtags">Hashtags</string>
+    <string name="chatgpt_recommendations">ChatGPT Recommendations</string>
+    <!--objectives array-list-->
+    <string-array name="objectives">
+        <item>Tagline</item>
+        <item>Facebook Ad</item>
+        <item>Elevator Pitch</item>
+        <item>Executive Summary</item>
+        <item>Improve SEO</item>
+        <item>Sample Review</item>
+        <item>Hashtags</item>
+        <item>ChatGPT Recommendations</item>
+    </string-array>
+    <!--post request category-->
+    <string name="request_tagline">tagline</string>
+    <string name="request_facebook_ad">facebookAd</string>
+    <string name="request_elevator_pitch">elevatorPitch</string>
+    <string name="request_executive_summary">executiveSummary</string>
+    <string name="request_seo">SEO</string>
+    <string name="request_customer_review">customerReview</string>
+    <string name="request_social_hashtags">social_hashtags</string>
+    <string name="request_chatgpt_recommendation">chatgptRecommendation</string>
 </resources>

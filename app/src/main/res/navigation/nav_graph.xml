@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/HomeFragment"
-        android:name="com.rodionovmax.onedron.HomeFragment"
+        android:name="com.rodionovmax.onedron.ui.HomeFragment"
         android:label="@string/home_fragment_label"
         tools:layout="@layout/fragment_home">
     </fragment>
