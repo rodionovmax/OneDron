@@ -131,16 +131,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    /*private fun collectListOfObjectives() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.listOfObjectives.collectLatest {
-                    objectivesList = it
-                }
-            }
-        }
-    }*/
-
     override fun onResume() {
         super.onResume()
         // to keep exposed dropdown menu after screen rotation
@@ -148,17 +138,6 @@ class HomeFragment : Fragment() {
         // restore camera and date after fragment recreated
         objectivesList = viewModel.listOfObjectives.value
     }
-
-    /*override fun onSaveInstanceState(outState: Bundle) {
-        outState.putStringArray(STRING_ARRAY, objectivesList)
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        val objectivesList = savedInstanceState?.getStringArray(STRING_ARRAY) as Array<out String>
-        Timber.d("!!! $objectivesList")
-    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

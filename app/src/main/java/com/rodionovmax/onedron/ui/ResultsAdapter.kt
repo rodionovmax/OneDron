@@ -15,17 +15,12 @@ class ResultsAdapter(private val results: List<String>) :
     }
 
     override fun onBindViewHolder(holder: ResultViewHolder, position: Int) {
-        /*with(holder) {
-            with(results[position]) {
-                binding.tvResult.text = this
-            }
-        }*/
         holder.bind(results[position])
     }
 
     override fun getItemCount() = results.size
 
-    inner class ResultViewHolder(val binding: ResultItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ResultViewHolder(private val binding: ResultItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(result: String) {
             binding.tvResult.text = result
         }
