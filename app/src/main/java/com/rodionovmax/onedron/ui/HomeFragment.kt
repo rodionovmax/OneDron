@@ -15,6 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.rodionovmax.onedron.R
 import com.rodionovmax.onedron.databinding.FragmentHomeBinding
 import com.rodionovmax.onedron.other.Converter
+import com.rodionovmax.onedron.other.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -30,7 +31,7 @@ class HomeFragment : Fragment() {
     private var objective: String? = null
     private var objectivesList: Array<out String> = arrayOf()
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +45,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setObjectivesAdapter()
-        selectObjective(savedInstanceState)
+        hideKeyboardOnDropdownPressed()
+        selectObjective()
 
         submitRequest()
         collectResults()
@@ -52,13 +54,22 @@ class HomeFragment : Fragment() {
 
     private fun setObjectivesAdapter() {
         objectivesList = resources.getStringArray(R.array.objectives)
-        val objectivesAdapter = ArrayAdapter(requireContext(),
-            R.layout.dropdown_menu_popup_item, objectivesList)
+        val objectivesAdapter = ArrayAdapter(
+            requireContext(),
+            R.layout.dropdown_menu_popup_item, objectivesList
+        )
         binding.objectiveTextview.setAdapter(objectivesAdapter)
-//        viewModel.cacheObjectives(objectivesList)
+        viewModel.cacheCategories(objectivesList)
     }
 
-    private fun selectObjective(savedInstanceState: Bundle?) {
+    private fun hideKeyboardOnDropdownPressed() {
+        binding.objectiveTextview.setOnClickListener {
+            // hide keyboard
+            this@HomeFragment.hideKeyboard()
+        }
+    }
+
+    private fun selectObjective() {
         binding.objectiveTextview.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
             when (position) {
                 0 -> objective = resources.getString(R.string.tagline)
@@ -84,7 +95,11 @@ class HomeFragment : Fragment() {
                     val category = Converter.objectiveToRequestCategory(requireContext(), objective)
 
                     if (url == "") {
-                        Toast.makeText(requireContext(), "Website field cannot be empty", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Website field cannot be empty",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                     if (url != "" && category != "") {
                         viewModel.postRequest(url, category)
@@ -106,33 +121,44 @@ class HomeFragment : Fragment() {
 
                     if (results.isNotEmpty()) {
                         binding.resultsRecyclerView.adapter = ResultsAdapter(results)
-                    } else {
-                        Toast.makeText(requireContext(), "No results returned", Toast.LENGTH_SHORT).show()
+                    }
+
+                    if (it.error.toString().trim() != "null") {
+                        Toast.makeText(requireContext(), it.error.toString(), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
     }
 
-    private fun collectListOfObjectives() {
+    /*private fun collectListOfObjectives() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.listOfObjectives.collectLatest {
-
+                    objectivesList = it
                 }
             }
         }
+    }*/
+
+    override fun onResume() {
+        super.onResume()
+        // to keep exposed dropdown menu after screen rotation
+        setObjectivesAdapter()
+        // restore camera and date after fragment recreated
+        objectivesList = viewModel.listOfObjectives.value
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
+    /*override fun onSaveInstanceState(outState: Bundle) {
         outState.putStringArray(STRING_ARRAY, objectivesList)
         super.onSaveInstanceState(outState)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        objectivesList = savedInstanceState?.getStringArray(STRING_ARRAY) as Array<out String>
-    }
+        val objectivesList = savedInstanceState?.getStringArray(STRING_ARRAY) as Array<out String>
+        Timber.d("!!! $objectivesList")
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -1,13 +1,12 @@
 package com.rodionovmax.onedron.ui
 
-import android.content.Context
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.CreationExtras
+import com.rodionovmax.onedron.BaseApp
 import com.rodionovmax.onedron.model.ResultDto
-import com.rodionovmax.onedron.other.Converter
 import com.rodionovmax.onedron.other.DataUiState
 import com.rodionovmax.onedron.repo.Repo
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,9 +14,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val STATE_CATEGORIES = "categories"
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repo: Repo
+    private val repo: Repo,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _dataUiState: MutableStateFlow<DataUiState> = MutableStateFlow(
@@ -32,6 +34,12 @@ class HomeViewModel @Inject constructor(
 
     private val _listOfObjectives: MutableStateFlow<Array<out String>> = MutableStateFlow(arrayOf())
     val listOfObjectives: StateFlow<Array<out String>> = _listOfObjectives.asStateFlow()
+
+    init {
+        savedStateHandle.get<Array<out String>>(STATE_CATEGORIES)?.let { categories ->
+            cacheCategories(categories)
+        }
+    }
 
     fun postRequest(website: String, category: String) {
         viewModelScope.launch {
@@ -50,8 +58,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun cacheObjectives(list: Array<out String>) {
+    fun cacheCategories(list: Array<out String>) {
         _listOfObjectives.value = list
+        savedStateHandle[STATE_CATEGORIES] = list
     }
 
     private fun emitDataUiState(
@@ -61,6 +70,27 @@ class HomeViewModel @Inject constructor(
     ) {
         val dataState = DataUiState(isLoading, results, error)
         _dataUiState.value = dataState
+    }
+
+    companion object {
+
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(
+                modelClass: Class<T>,
+                extras: CreationExtras
+            ): T {
+                // Get the Application object from extras
+                val application = checkNotNull(extras[APPLICATION_KEY])
+                // Create a SavedStateHandle for this ViewModel from extras
+                val savedStateHandle = extras.createSavedStateHandle()
+
+                return HomeViewModel(
+                    (application as BaseApp).repo,
+                    savedStateHandle
+                ) as T
+            }
+        }
     }
 
 }

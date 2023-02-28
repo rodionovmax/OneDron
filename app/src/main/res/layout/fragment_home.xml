@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginHorizontal="8dp"
     tools:context=".ui.HomeFragment">
 
     <TextView
@@ -11,6 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/website_textview_label"
+        style="@style/TextViewOneDronText"
+        android:layout_marginTop="12dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -22,7 +25,7 @@
         android:layout_marginBottom="12dp"
         android:hint="@string/hint"
         app:endIconMode="clear_text"
-        app:endIconTint="@color/colorAccent"
+        app:endIconTint="?attr/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/website_label">
 
@@ -36,11 +39,13 @@
 
     <TextView
         android:id="@+id/dropdown_label"
+        style="@style/TextViewOneDronText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/dropdown_label"
-        app:layout_constraintTop_toBottomOf="@id/website_input"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/website_input" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dropdown"
@@ -74,6 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/submit"
+        style="@style/OutlinedButtonOneDron"
         app:layout_constraintTop_toBottomOf="@id/results_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -83,6 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
+        style="@style/ProgressBarOneDron"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
